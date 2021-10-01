@@ -1,0 +1,22 @@
+.task-item {
+  display: flex;
+  height: 60px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  padding: 10px;
+
+  &:hover {
+    background-color: #ccc;
+    transition: 0.1s linear;
+  }
+
+  & > span {
+    height: 100%;
+    line-height: 40px;
+    margin-right: 20px;
+  }
+
+  .ant-picker {
+    width: 100px;
+  }
+}
