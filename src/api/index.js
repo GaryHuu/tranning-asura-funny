@@ -3,10 +3,11 @@ import { LOCALSTORAGE } from '../constants';
 const initialList = [
   {
     id: 1,
+    key: 1,
     jobTitle: 'Code',
     time: '17:00:00',
     fullName: 'Nguyễn Hồng Hữu',
-    dayOfBirth: '22/08/2000',
+    dayOfBirth: '22-08-2000',
     location: 'Hồ Chí Minh',
     phone: '0379339693',
     email: 'nguyenhuu220800@gmail.com',
@@ -19,6 +20,7 @@ const initialList = [
   },
   {
     id: 2,
+    key: 2,
     jobTitle: 'Eat',
     time: '18:20:00',
     fullName: 'Đặng Tường Vy',
@@ -35,6 +37,7 @@ const initialList = [
   },
   {
     id: 3,
+    key: 3,
     jobTitle: 'Sleep',
     time: '20:21:00',
     fullName: 'Gold',

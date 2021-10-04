@@ -1,44 +1,4 @@
 .task-detail {
-  padding: 10px;
-  flex: 1;
-
-  & > button {
-    margin-bottom: 4px;
-    min-width: 60px;
-  }
-
-  .title-info {
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
-
-  .text-list {
-    .wrap {
-      max-width: 400px;
-
-      input,
-      button {
-        height: 40px;
-      }
-
-      button {
-        top: unset;
-        bottom: 0;
-      }
-
-      & > .time-pick {
-        display: flex;
-        justify-content: space-between;
-
-        .ant-picker {
-          max-width: 120px;
-        }
-
-        span {
-          font-size: 12px;
-          line-height: 40px;
-        }
-      }
-    }
-  }
+  width: 50%;
+  padding: 20px;
 }

@@ -1,13 +1,8 @@
-import { Spin } from 'antd';
-import React from 'react';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { api } from 'api';
 
-import TaskItem from '../components/TaskItem';
-
-import '../assets/styles.scss';
+import TaskListForm from '../components/TaskListForm';
 
 function TaskList() {
   const [taskList, setTaskList] = useState([]);
@@ -17,9 +12,8 @@ function TaskList() {
     (async () => {
       try {
         const data = await api.getAll();
-        console.log(data);
-        setLoading(false);
         setTaskList(data);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -29,14 +23,7 @@ function TaskList() {
   return (
     <>
       <div className='title'>Danh sách công việc</div>
-      {loading ? (
-        <div className='loading'>
-          Loading...
-          <Spin size='small' />
-        </div>
-      ) : (
-        taskList.map((item) => <TaskItem key={item.id} task={item} />)
-      )}
+      <TaskListForm taskList={taskList} loading={loading} />
     </>
   );
 }

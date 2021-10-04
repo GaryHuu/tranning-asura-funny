@@ -1,48 +1,18 @@
-import React, { useState } from 'react';
+import { PropTypes } from 'prop-types';
+import React from 'react';
 
-import ButtonConfirm from 'Task/components/ButtonConfirm';
+import DayEditForm from '../components/DayEditForm';
 
-import DayPicker from '../components/DayPicker';
-
-import '../assets/styles.scss';
+DayEdit.propTypes = {
+  disabled: PropTypes.bool,
+  name: PropTypes.string,
+  label: PropTypes.string,
+};
 
 function DayEdit(props) {
-  const { name, day, label, onEdit, disabled } = props;
-  const [isChange, setIsChange] = useState(false);
-  const [dayInput, setDayInput] = useState(day);
+  const { label, name, disabled } = props;
 
-  const handleConfirm = () => {
-    setIsChange(false);
-    if (!onEdit) return;
-
-    console.log(dayInput);
-
-    if (name) {
-      onEdit({
-        [name]: dayInput,
-      });
-      return;
-    }
-
-    onEdit(dayInput);
-  };
-
-  const handleDayChange = (value) => {
-    setDayInput(value);
-    setIsChange(true);
-  };
-
-  return (
-    <div className='wrap'>
-      {label && <label>{label}:</label>}
-      <DayPicker
-        disabled={disabled}
-        day={dayInput}
-        onChange={handleDayChange}
-      />
-      {isChange && <ButtonConfirm onClick={handleConfirm} />}
-    </div>
-  );
+  return <DayEditForm label={label} name={name} disabled={disabled} />;
 }
 
 export default DayEdit;
