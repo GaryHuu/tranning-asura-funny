@@ -13,6 +13,9 @@ const initialList = [
     currentJob: 'Intern',
     experience: 'None',
     note: 'None',
+    idCard: '212589849',
+    startTime: '17:00:00',
+    finishTime: '18:00:00',
   },
   {
     id: 2,
@@ -26,6 +29,9 @@ const initialList = [
     currentJob: 'Student',
     experience: 'None',
     note: 'None',
+    idCard: '212589849',
+    startTime: '18:00:00',
+    finishTime: '19:00:00',
   },
   {
     id: 3,
@@ -39,6 +45,9 @@ const initialList = [
     currentJob: 'Student',
     experience: 'None',
     note: 'None',
+    idCard: '212589849',
+    startTime: '07:00:00',
+    finishTime: '10:00:00',
   },
 ];
 

@@ -6,6 +6,8 @@ import { api } from 'api';
 import DayEdit from 'Task/components/DayEdit';
 import TextEdit from 'Task/components/TextEdit';
 
+import TimeFromToForm from '../components/TimeFromToForm';
+
 import '../assets/styles.scss';
 
 const MODE = {
@@ -25,6 +27,7 @@ function TaskDetail() {
   const listInfo = useMemo(() => {
     return [
       {
+        type: 'text',
         name: 'fullName',
         label: 'Name',
         value: task.fullName,
@@ -36,34 +39,53 @@ function TaskDetail() {
         day: task.dayOfBirth,
       },
       {
+        type: 'text',
         name: 'location',
         label: 'Location',
         value: task.location,
       },
       {
+        type: 'text',
         name: 'phone',
         label: 'Phone',
         value: task.phone,
       },
       {
+        type: 'text',
         name: 'email',
         label: 'Email',
         value: task.email,
       },
       {
+        type: 'text',
         name: 'currentJob',
         label: 'Current Job',
         value: task.currentJob,
       },
       {
+        type: 'text',
         name: 'experience',
         label: 'Experience',
         value: task.experience,
       },
       {
+        type: 'text',
         name: 'note',
         label: 'Note',
         value: task.note,
+      },
+      {
+        type: 'text',
+        name: 'idCard',
+        label: 'ID Card',
+        value: task.idCard,
+      },
+      {
+        type: 'from to',
+        name: null,
+        label: 'Work Time',
+        startTime: task.startTime,
+        finishTime: task.finishTime,
       },
     ];
   }, [task]);
@@ -100,6 +122,7 @@ function TaskDetail() {
     (async () => {
       try {
         const result = await api.getByID(parseInt(id));
+        console.log(result);
         setTask(result);
         setLoading(false);
       } catch (error) {
@@ -109,6 +132,18 @@ function TaskDetail() {
   }, [id]);
 
   const handleSelectInfoType = (info) => {
+    if (info.type === 'text')
+      return (
+        <TextEdit
+          disabled={mode === MODE.DISABLED}
+          key={info.name + info.label}
+          onEdit={handleEdit}
+          name={info.name}
+          label={info.label}
+          value={info.value}
+        />
+      );
+
     if (info.type === 'day')
       return (
         <DayEdit
@@ -120,16 +155,18 @@ function TaskDetail() {
           onEdit={handleEdit}
         />
       );
-    return (
-      <TextEdit
-        disabled={mode === MODE.DISABLED}
-        key={info.name + info.label}
-        onEdit={handleEdit}
-        name={info.name}
-        label={info.label}
-        value={info.value}
-      />
-    );
+    if (info.type === 'from to')
+      return (
+        <TimeFromToForm
+          disabled={mode === MODE.DISABLED}
+          key={info.label}
+          formatStartFinish={true}
+          label={info.label}
+          startTime={task.startTime}
+          finishTime={task.finishTime}
+          onEdit={handleEdit}
+        />
+      );
   };
 
   return (
