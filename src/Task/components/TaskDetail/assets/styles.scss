@@ -14,7 +14,7 @@
 
   .text-list {
     .wrap {
-      max-width: 300px;
+      max-width: 400px;
 
       input,
       button {
@@ -24,6 +24,20 @@
       button {
         top: unset;
         bottom: 0;
+      }
+
+      & > .time-pick {
+        display: flex;
+        justify-content: space-between;
+
+        .ant-picker {
+          max-width: 120px;
+        }
+
+        span {
+          font-size: 12px;
+          line-height: 40px;
+        }
       }
     }
   }
