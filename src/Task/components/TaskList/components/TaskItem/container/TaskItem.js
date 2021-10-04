@@ -4,10 +4,10 @@ import moment from 'moment';
 import React from 'react';
 import { useHistory, useRouteMatch } from 'react-router';
 
-import TextEdit from '../../../../TextEdit';
+import { api } from 'api';
+import TextEdit from 'Task/components/TextEdit';
 
 import '../assets/styles.scss';
-import { api } from './../../../../../../api';
 
 function TaskItem({ task }) {
   const { time, id, jobTitle } = task;

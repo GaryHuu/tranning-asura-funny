@@ -1,11 +1,13 @@
+import { Spin } from 'antd';
 import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 
-import { api } from './../../../../api';
-import TaskItem from './../components/TaskItem/container/TaskItem';
+import { api } from 'api';
+
+import TaskItem from '../components/TaskItem';
+
 import '../assets/styles.scss';
-import { Spin } from 'antd';
 
 function TaskList() {
   const [taskList, setTaskList] = useState([]);

@@ -1,8 +1,19 @@
+import { PropTypes } from 'prop-types';
 import React, { useState } from 'react';
 
+import ButtonConfirm from 'Task/components/ButtonConfirm';
+
 import InputField from '../components/InputField';
+
 import '../assets/styles.scss';
-import ButtonConfirm from '../../ButtonConfirm';
+
+TextEdit.propTypes = {
+  value: PropTypes.string,
+  onChange: PropTypes.func,
+  disabled: PropTypes.bool,
+  name: PropTypes.string,
+  label: PropTypes.string,
+};
 
 function TextEdit(props) {
   const { value, onEdit, label, name, disabled } = props;
@@ -11,7 +22,6 @@ function TextEdit(props) {
 
   const handleConfirm = () => {
     setIsChange(false);
-    if (!onEdit) return;
 
     if (name) {
       onEdit({
@@ -40,5 +50,9 @@ function TextEdit(props) {
     </div>
   );
 }
+
+TextEdit.defaultProps = {
+  onChange: () => {},
+};
 
 export default TextEdit;

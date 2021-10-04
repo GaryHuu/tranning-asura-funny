@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import ButtonConfirm from '../../ButtonConfirm';
+
+import ButtonConfirm from 'Task/components/ButtonConfirm';
+
 import DayPicker from '../components/DayPicker';
+
 import '../assets/styles.scss';
 
 function DayEdit(props) {
