@@ -2,13 +2,16 @@ import { Button, Spin } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 
-import ButtonConfirm from '../../ButtonConfirm';
-import DayPicker from '../../DayEdit/components/DayPicker';
-import DayEdit from '../../DayEdit/container/DayEdit';
-import { api } from './../../../../api';
-import TextEdit from './../../TextEdit';
+import { api } from 'api';
+import DayEdit from 'Task/components/DayEdit';
+import TextEdit from 'Task/components/TextEdit';
 
 import '../assets/styles.scss';
+
+const MODE = {
+  DISABLED: 'DISABLED',
+  EDIT: 'EDIT',
+};
 
 function TaskDetail() {
   const {
@@ -17,7 +20,7 @@ function TaskDetail() {
 
   const [task, setTask] = useState({});
   const [loading, setLoading] = useState(true);
-  const [disabled, setDisabled] = useState(true);
+  const [mode, setMode] = useState(MODE.DISABLED);
 
   const listInfo = useMemo(() => {
     return [
@@ -74,7 +77,7 @@ function TaskDetail() {
   };
 
   const handleButtonEditClick = () => {
-    if (!disabled) {
+    if (mode === MODE.EDIT) {
       setLoading(true);
       (async () => {
         try {
@@ -85,8 +88,11 @@ function TaskDetail() {
           console.log(error);
         }
       })();
+      setMode(MODE.DISABLED);
+      return;
     }
-    setDisabled(!disabled);
+
+    setMode(MODE.EDIT);
   };
 
   useEffect(() => {
@@ -102,6 +108,30 @@ function TaskDetail() {
     })();
   }, [id]);
 
+  const handleSelectInfoType = (info) => {
+    if (info.type === 'day')
+      return (
+        <DayEdit
+          disabled={mode === MODE.DISABLED}
+          key={info.name + info.label}
+          name={info.name}
+          label={info.label}
+          day={task.dayOfBirth}
+          onEdit={handleEdit}
+        />
+      );
+    return (
+      <TextEdit
+        disabled={mode === MODE.DISABLED}
+        key={info.name + info.label}
+        onEdit={handleEdit}
+        name={info.name}
+        label={info.label}
+        value={info.value}
+      />
+    );
+  };
+
   return (
     <div className='task-detail'>
       <div className='title-info'>Thông tin chi tiết</div>
@@ -113,32 +143,10 @@ function TaskDetail() {
       ) : (
         <>
           <Button onClick={handleButtonEditClick} type='primary'>
-            {disabled ? 'EDIT' : 'SAVE'}
+            {mode === MODE.DISABLED ? 'EDIT' : 'SAVE'}
           </Button>
           <div className='text-list'>
-            {listInfo.map((info) => {
-              if (info.type !== 'day')
-                return (
-                  <TextEdit
-                    disabled={disabled}
-                    key={Math.random()}
-                    onEdit={handleEdit}
-                    name={info.name}
-                    label={info.label}
-                    value={info.value}
-                  />
-                );
-              return (
-                <DayEdit
-                  disabled={disabled}
-                  key={Math.random()}
-                  name='dayOfBirth'
-                  label='Day of birth'
-                  day={task.dayOfBirth}
-                  onEdit={handleEdit}
-                />
-              );
-            })}
+            {listInfo.map((info) => handleSelectInfoType(info))}
           </div>
         </>
       )}

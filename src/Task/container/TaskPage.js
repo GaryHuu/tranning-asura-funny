@@ -3,6 +3,7 @@ import { Route, Switch, useRouteMatch } from 'react-router';
 
 import TaskDetail from '../components/TaskDetail';
 import TaskList from '../components/TaskList';
+
 import '../assets/styles.scss';
 
 function TaskPage() {
