@@ -1,9 +1,12 @@
-import { api } from 'api';
 import moment from 'moment';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
-import '../assets/styles.scss';
+
+import { api } from 'api';
+
 import TaskDetailView from '../components/TaskDetailView';
+
+import '../assets/styles.scss';
 
 const MODE = {
   DISABLED: 'DISABLED',
@@ -15,112 +18,46 @@ function TaskDetail() {
     params: { id },
   } = useRouteMatch();
 
-  const [task, setTask] = useState({});
   const [loading, setLoading] = useState(true);
   const [mode, setMode] = useState(MODE.DISABLED);
+
+  const [task, setTask] = useState({});
   const [fields, setFields] = useState([]);
+  const [infoFieldList, setInfoFieldList] = useState([]);
 
-  const setValueFileds = (task) => {
-    setFields([
-      {
-        name: ['fullName'],
-        value: task.fullName,
-      },
-      {
-        name: ['dayOfBirth'],
-        value: moment(task.dayOfBirth, 'DD/MM/YYYY'),
-      },
-      {
-        name: ['location'],
-        value: task.location,
-      },
-      {
-        name: ['phone'],
-        value: task.phone,
-      },
-      {
-        name: ['email'],
-        value: task.email,
-      },
-      {
-        name: ['currentJob'],
-        value: task.currentJob,
-      },
-      {
-        name: ['experience'],
-        value: task.experience,
-      },
-      {
-        name: ['note'],
-        value: task.note,
-      },
-      {
-        name: ['idCard'],
-        value: task.idCard,
-      },
-    ]);
-  };
+  const setFieldsByTask = useCallback(
+    (task) => {
+      let newFields = [];
+      infoFieldList.forEach((infoField) => {
+        let newInfoField = {
+          name: [infoField.name],
+          value: task[infoField.name],
+        };
 
-  useEffect(() => {
-    setValueFileds(task);
-  }, [task]);
+        if (infoField.type === 'date') {
+          newInfoField = {
+            name: [infoField.name],
+            value: moment(task[infoField.name], 'DD/MM/YYYY'),
+          };
+        }
 
-  const listInfo = useMemo(() => {
-    return [
-      {
-        type: 'text',
-        name: 'fullName',
-        label: 'Name',
-      },
-      {
-        type: 'day',
-        name: 'dayOfBirth',
-        label: 'Day of birth',
-      },
-      {
-        type: 'text',
-        name: 'location',
-        label: 'Location',
-      },
-      {
-        type: 'text',
-        name: 'phone',
-        label: 'Phone',
-      },
-      {
-        type: 'text',
-        name: 'email',
-        label: 'Email',
-      },
-      {
-        type: 'text',
-        name: 'currentJob',
-        label: 'Current Job',
-      },
-      {
-        type: 'text',
-        name: 'experience',
-        label: 'Experience',
-      },
-      {
-        type: 'text',
-        name: 'note',
-        label: 'Note',
-      },
-      {
-        type: 'text',
-        name: 'idCard',
-        label: 'ID Card',
-      },
-      // {
-      //   type: 'from to',
-      //   name: null,
-      //   label: 'Work Time',
-      //   startTime: task.startTime,
-      //   finishTime: task.finishTime,
-      // },
-    ];
-  }, [task]);
+        if (infoField.type === 'time from to') {
+          newInfoField = {
+            name: [infoField.name],
+            value: [
+              moment(task[infoField.name]?.startTime, 'HH:mm:ss'),
+              moment(task[infoField.name]?.finishTime, 'HH:mm:ss'),
+            ],
+          };
+        }
+
+        newFields.push(newInfoField);
+      });
+
+      setFields(newFields);
+    },
+    [infoFieldList]
+  );
 
   const handleToggleMode = () => {
     if (mode === MODE.DISABLED) {
@@ -135,49 +72,135 @@ function TaskDetail() {
     (async () => {
       try {
         const result = await api.getByID(parseInt(id));
+        setFieldsByTask(result);
         setTask(result);
-
-        setValueFileds(result);
-
         setLoading(false);
       } catch (error) {
         console.log(error);
       }
     })();
-  }, [id]);
+  }, [id, setFieldsByTask]);
 
-  const handleSubmit = (values) => {
-    const dayOfBirth = new Date(values.dayOfBirth._d).toLocaleDateString();
-    const newValue = {
+  useEffect(() => {
+    (async () => {
+      try {
+        const result = await api.getInfoFields();
+        setInfoFieldList(result);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  const getNameFieldTypeFromTo = () => {
+    const infoFieldTypeFromTo = infoFieldList.filter((field) => {
+      return field.type === 'time from to';
+    });
+    return infoFieldTypeFromTo.map((field) => field.name);
+  };
+
+  const getNameFieldTypeDate = () => {
+    const infoFieldTypeFromTo = infoFieldList.filter((field) => {
+      return field.type === 'date';
+    });
+    return infoFieldTypeFromTo.map((field) => field.name);
+  };
+
+  const handleSubmit = (newTask) => {
+    let newData = {
       ...task,
-      ...values,
-      dayOfBirth,
+      ...newTask,
     };
 
+    const infoFieldTypeFromTo = getNameFieldTypeFromTo();
+    infoFieldTypeFromTo.forEach((field) => {
+      const startTime = new Date(newTask[field][0]._d).toLocaleTimeString();
+      const finishTime = new Date(newTask[field][1]._d).toLocaleTimeString();
+      newData = {
+        ...newData,
+        [field]: {
+          startTime,
+          finishTime,
+        },
+      };
+    });
+
+    const infoFieldTypeDate = getNameFieldTypeDate();
+    infoFieldTypeDate.forEach((field) => {
+      const date = new Date(newTask[field]._d).toLocaleDateString();
+      newData = {
+        ...newData,
+        [field]: date,
+      };
+    });
+
     setLoading(true);
+    (async () => {
+      try {
+        const result = await api.editByID(parseInt(id), newData);
+        setFieldsByTask(result);
+        setTask(result);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+    handleToggleMode();
+  };
+
+  const formatNewFiledData = (newInfoFiled) => {
+    if (newInfoFiled.type === 'text')
+      return {
+        [newInfoFiled.name]: '',
+      };
+
+    if (newInfoFiled.type === 'date')
+      return {
+        [newInfoFiled.name]: new Date().toLocaleDateString(),
+      };
+
+    if (newInfoFiled.type === 'time from to')
+      return {
+        [newInfoFiled.name]: {
+          startTime: new Date().toLocaleTimeString(),
+          finishTime: new Date().toLocaleTimeString(),
+        },
+      };
+  };
+
+  const handleOnAddField = (newInfoFiled) => {
+    const newDateField = formatNewFiledData(newInfoFiled);
+    console.log(newDateField);
 
     (async () => {
       try {
-        const result = await api.editByID(parseInt(id), newValue);
+        const result = await api.editByID(parseInt(id), newDateField);
+        setFieldsByTask(result);
         setTask(result);
-        console.log(result);
-        setLoading(false);
       } catch (error) {
         console.log(error);
       }
     })();
 
-    handleToggleMode();
+    (async () => {
+      try {
+        const result = await api.addNewField(newInfoFiled);
+        setInfoFieldList(result);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
   };
 
   return (
     <TaskDetailView
+      onAddField={handleOnAddField}
       onSubmit={handleSubmit}
       disabled={mode === MODE.DISABLED}
       onSetModeEdit={handleToggleMode}
       loading={loading}
       fields={fields}
-      listInfo={listInfo}
+      infoFieldList={infoFieldList}
     />
   );
 }

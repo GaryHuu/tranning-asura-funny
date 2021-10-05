@@ -1,11 +1,26 @@
-import { Button, Form, Spin } from 'antd';
-import React from 'react';
+import { Button, Form, Input, Space, Spin } from 'antd';
+import React, { useState } from 'react';
+
 import DayEdit from 'Task/components/DayEdit';
 import TextEdit from 'Task/components/TextEdit';
+import TimeFromTo from 'Task/components/TimeFromTo';
+
+import NewFieldsInfo from './NewFieldsInfo';
 
 function TaskDetailView(props) {
-  const { onSubmit, fields, disabled, listInfo, loading, onSetModeEdit } =
-    props;
+  const {
+    onAddField,
+    onSubmit,
+    fields,
+    disabled,
+    infoFieldList,
+    loading,
+    onSetModeEdit,
+  } = props;
+
+  // console.log(infoFieldList);
+
+  const [isShowNewFiledsInfo, setIsShowNewFiledsInfo] = useState(false);
 
   const handleSelectInfoType = (info) => {
     if (info.type === 'text')
@@ -18,7 +33,7 @@ function TaskDetailView(props) {
         />
       );
 
-    if (info.type === 'day')
+    if (info.type === 'date')
       return (
         <DayEdit
           key={info.name + info.label}
@@ -27,6 +42,31 @@ function TaskDetailView(props) {
           label={info.label}
         />
       );
+    if (info.type === 'time from to')
+      return (
+        <TimeFromTo
+          key={info.name + info.label}
+          disabled={disabled}
+          name={info.name}
+          label={info.label}
+        />
+      );
+  };
+
+  const handleConfirmNewFieldsInfo = (value) => {
+    const newInfoFiled = {
+      ...value,
+      name: value.label,
+    };
+    // console.log(newInfoFiled);
+
+    onAddField(newInfoFiled);
+
+    setIsShowNewFiledsInfo(false);
+  };
+
+  const handleAddNewField = () => {
+    setIsShowNewFiledsInfo(true);
   };
 
   return (
@@ -40,6 +80,7 @@ function TaskDetailView(props) {
       ) : (
         <>
           <Button
+            style={{ margin: '10px 0' }}
             onClick={() => {
               onSetModeEdit();
             }}
@@ -55,13 +96,31 @@ function TaskDetailView(props) {
               layout='vertical'
               onFinish={onSubmit}
             >
-              {listInfo.map((info) => handleSelectInfoType(info))}
+              {infoFieldList.map((info) => handleSelectInfoType(info))}
+
               {disabled ? null : (
-                <Button htmlType='submit' type='primary'>
+                <Button
+                  style={{ display: 'block', marginTop: '10px' }}
+                  htmlType='submit'
+                  type='primary'
+                >
                   Submit
                 </Button>
               )}
             </Form>
+            {disabled || (
+              <Button
+                style={{ display: 'block', margin: '10px 0' }}
+                type='dashed'
+                onClick={handleAddNewField}
+              >
+                Add new field
+              </Button>
+            )}
+
+            {isShowNewFiledsInfo && (
+              <NewFieldsInfo onConfirm={handleConfirmNewFieldsInfo} />
+            )}
           </div>
         </>
       )}

@@ -6,7 +6,7 @@ function DayEditForm(props) {
 
   return (
     <Form.Item name={name} label={label}>
-      <DatePicker disabled={disabled} />
+      <DatePicker format='DD/MM/YYYY' disabled={disabled} />
     </Form.Item>
   );
 }
