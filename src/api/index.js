@@ -7,7 +7,7 @@ const initialList = [
     jobTitle: 'Code',
     time: '17:00:00',
     fullName: 'Nguyễn Hồng Hữu',
-    dayOfBirth: '22-08-2000',
+    dateOfBirth: '22-08-2000',
     location: 'Hồ Chí Minh',
     phone: '0379339693',
     email: 'nguyenhuu220800@gmail.com',
@@ -15,8 +15,10 @@ const initialList = [
     experience: 'None',
     note: 'None',
     idCard: '212589849',
-    startTime: '17:00:00',
-    finishTime: '18:00:00',
+    workTime: {
+      startTime: '17:00:00',
+      finishTime: '18:00:00',
+    },
   },
   {
     id: 2,
@@ -24,7 +26,7 @@ const initialList = [
     jobTitle: 'Eat',
     time: '18:20:00',
     fullName: 'Đặng Tường Vy',
-    dayOfBirth: '08-04-2001',
+    dateOfBirth: '08-04-2001',
     location: 'Hồ Chí Minh',
     phone: '0702359976',
     email: 'dangtuongvy080401@gmail.com',
@@ -32,8 +34,10 @@ const initialList = [
     experience: 'None',
     note: 'None',
     idCard: '212589849',
-    startTime: '18:00:00',
-    finishTime: '19:00:00',
+    workTime: {
+      startTime: '18:00:00',
+      finishTime: '19:00:00',
+    },
   },
   {
     id: 3,
@@ -41,7 +45,7 @@ const initialList = [
     jobTitle: 'Sleep',
     time: '20:21:00',
     fullName: 'Gold',
-    dayOfBirth: '19-07-2014',
+    dateOfBirth: '19-07-2014',
     location: 'Quảng Ngãi',
     phone: '113',
     email: 'gold1907@gmail.com',
@@ -49,8 +53,63 @@ const initialList = [
     experience: 'None',
     note: 'None',
     idCard: '212589849',
-    startTime: '07:00:00',
-    finishTime: '10:00:00',
+    workTime: {
+      startTime: '00:06:06',
+      finishTime: '06:06:12',
+    },
+  },
+];
+
+const inititalInfoField = [
+  {
+    type: 'text',
+    name: 'fullName',
+    label: 'Name',
+  },
+  {
+    type: 'date',
+    name: 'dateOfBirth',
+    label: 'Date of birth',
+  },
+  {
+    type: 'text',
+    name: 'location',
+    label: 'Location',
+  },
+  {
+    type: 'text',
+    name: 'phone',
+    label: 'Phone',
+  },
+  {
+    type: 'text',
+    name: 'email',
+    label: 'Email',
+  },
+  {
+    type: 'text',
+    name: 'currentJob',
+    label: 'Current Job',
+  },
+  {
+    type: 'text',
+    name: 'experience',
+    label: 'Experience',
+  },
+  {
+    type: 'text',
+    name: 'note',
+    label: 'Note',
+  },
+  {
+    type: 'text',
+    name: 'idCard',
+    label: 'ID Card',
+  },
+  {
+    type: 'time from to',
+    name: 'workTime',
+    label: 'Work Time',
   },
 ];
 
@@ -58,6 +117,9 @@ const FAKETIMEOUT = 500;
 
 export const api = {
   list: JSON.parse(localStorage.getItem(LOCALSTORAGE.LIST)) || initialList,
+  infoField:
+    JSON.parse(localStorage.getItem(LOCALSTORAGE.INFOFIELD)) ||
+    inititalInfoField,
   getAll() {
     return new Promise((resolve) => {
       setTimeout(() => {
@@ -82,12 +144,36 @@ export const api = {
     this.list[index] = {
       ...newData,
     };
+    console.log('Data api', this.list);
 
     localStorage.setItem(LOCALSTORAGE.LIST, JSON.stringify(this.list));
 
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(this.list[index]);
+      }, FAKETIMEOUT);
+    });
+  },
+  getInfoFields() {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.infoField);
+      }, FAKETIMEOUT);
+    });
+  },
+  addNewField(data) {
+    const newData = [...this.infoField];
+    newData.push(data);
+    this.infoField = [...newData];
+
+    localStorage.setItem(
+      LOCALSTORAGE.INFOFIELD,
+      JSON.stringify(this.infoField)
+    );
+
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.infoField);
       }, FAKETIMEOUT);
     });
   },
