@@ -67,31 +67,6 @@ function TaskDetail() {
     setMode(MODE.DISABLED);
   };
 
-  useEffect(() => {
-    setLoading(true);
-    (async () => {
-      try {
-        const result = await api.getByID(parseInt(id));
-        setFieldsByTask(result);
-        setTask(result);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, [id, setFieldsByTask]);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const result = await api.getInfoFields();
-        setInfoFieldList(result);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
-
   const getNameFieldTypeFromTo = () => {
     const infoFieldTypeFromTo = infoFieldList.filter((field) => {
       return field.type === 'time from to';
@@ -184,7 +159,7 @@ function TaskDetail() {
 
     (async () => {
       try {
-        const result = await api.addNewField(newInfoFiled);
+        const result = await api.addNewField(parseInt(id), newInfoFiled);
         setInfoFieldList(result);
       } catch (error) {
         console.log(error);
@@ -192,15 +167,103 @@ function TaskDetail() {
     })();
   };
 
+  const handleOnAddFieldAfterIndex = (newInfoFiled, index) => {
+    const newDateField = formatNewFiledData(newInfoFiled);
+
+    (async () => {
+      try {
+        const result = await api.editByID(parseInt(id), newDateField);
+        setFieldsByTask(result);
+        setTask(result);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+
+    (async () => {
+      try {
+        const result = await api.addNewFieldAfter(
+          parseInt(id),
+          newInfoFiled,
+          index
+        );
+        setInfoFieldList(result);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  };
+
+  const handleRemoveField = (name) => {
+    (async () => {
+      try {
+        const result = await api.editByID(parseInt(id), name);
+        setFieldsByTask(result);
+        setTask(result);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+
+    (async () => {
+      try {
+        const result = await api.deleteField(parseInt(id), name);
+        setInfoFieldList(result);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  };
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   (async () => {
+  //     try {
+  //       const result = await api.getByID(parseInt(id));
+  //       setFieldsByTask(result);
+  //       setTask(result);
+  //       setLoading(false);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   })();
+  // }, [id, setFieldsByTask]);
+
+  useEffect(() => {
+    setMode(MODE.DISABLED);
+    setLoading(true);
+    (async () => {
+      try {
+        const result = await api.getByID(parseInt(id));
+        setFieldsByTask(result);
+        setTask(result);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+
+    (async () => {
+      try {
+        const result = await api.getInfoFields(parseInt(id));
+        setInfoFieldList(result);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, [id, setFieldsByTask]);
+
   return (
     <TaskDetailView
       onAddField={handleOnAddField}
+      onAddFieldAfterIndex={handleOnAddFieldAfterIndex}
       onSubmit={handleSubmit}
       disabled={mode === MODE.DISABLED}
       onSetModeEdit={handleToggleMode}
       loading={loading}
       fields={fields}
       infoFieldList={infoFieldList}
+      onRemoveFiled={handleRemoveField}
     />
   );
 }
