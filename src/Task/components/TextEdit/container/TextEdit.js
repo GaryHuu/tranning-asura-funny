@@ -10,8 +10,15 @@ TextEdit.propTypes = {
 };
 
 function TextEdit(props) {
-  const { label, name, disabled } = props;
+  const { label, name, disabled, onRemove } = props;
 
-  return <TextEditForm label={label} name={name} disabled={disabled} />;
+  return (
+    <TextEditForm
+      onRemove={onRemove}
+      label={label}
+      name={name}
+      disabled={disabled}
+    />
+  );
 }
 export default TextEdit;

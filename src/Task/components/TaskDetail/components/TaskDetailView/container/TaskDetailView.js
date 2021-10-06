@@ -1,14 +1,12 @@
-import { Button, Form, Input, Space, Spin } from 'antd';
+import { Button, Form, Spin } from 'antd';
 import React, { useState } from 'react';
 
-import DayEdit from 'Task/components/DayEdit';
-import TextEdit from 'Task/components/TextEdit';
-import TimeFromTo from 'Task/components/TimeFromTo';
-
-import NewFieldsInfo from './NewFieldsInfo';
+import NewFieldsInfo from '../../NewFieldsInfo';
+import TaskDetailViewFieldItem from '../components/TaskDetailViewFieldItem';
 
 function TaskDetailView(props) {
   const {
+    onAddFieldAfterIndex,
     onAddField,
     onSubmit,
     fields,
@@ -16,41 +14,19 @@ function TaskDetailView(props) {
     infoFieldList,
     loading,
     onSetModeEdit,
+    onRemoveFiled,
   } = props;
-
-  // console.log(infoFieldList);
 
   const [isShowNewFiledsInfo, setIsShowNewFiledsInfo] = useState(false);
 
-  const handleSelectInfoType = (info) => {
-    if (info.type === 'text')
-      return (
-        <TextEdit
-          key={info.name + info.label}
-          disabled={disabled}
-          name={info.name}
-          label={info.label}
-        />
-      );
+  const handleButtonAddSameFieldClick = (type, label, index) => {
+    const newInfoFiled = {
+      type,
+      label,
+      name: label,
+    };
 
-    if (info.type === 'date')
-      return (
-        <DayEdit
-          key={info.name + info.label}
-          disabled={disabled}
-          name={info.name}
-          label={info.label}
-        />
-      );
-    if (info.type === 'time from to')
-      return (
-        <TimeFromTo
-          key={info.name + info.label}
-          disabled={disabled}
-          name={info.name}
-          label={info.label}
-        />
-      );
+    onAddFieldAfterIndex(newInfoFiled, index);
   };
 
   const handleConfirmNewFieldsInfo = (value) => {
@@ -74,7 +50,7 @@ function TaskDetailView(props) {
       <div className='title-info'>Thông tin chi tiết</div>
       {loading ? (
         <>
-          Loading...
+          {/* Loading... */}
           <Spin size='small' />
         </>
       ) : (
@@ -96,9 +72,20 @@ function TaskDetailView(props) {
               layout='vertical'
               onFinish={onSubmit}
             >
-              {infoFieldList.map((info) => handleSelectInfoType(info))}
+              {infoFieldList.map((info, idx) => (
+                <TaskDetailViewFieldItem
+                  key={info.name + info.label}
+                  disabled={disabled}
+                  name={info.name}
+                  label={info.label}
+                  index={idx}
+                  type={info.type}
+                  onItemClick={handleButtonAddSameFieldClick}
+                  onRemoveFiled={onRemoveFiled}
+                />
+              ))}
 
-              {disabled ? null : (
+              {disabled || (
                 <Button
                   style={{ display: 'block', marginTop: '10px' }}
                   htmlType='submit'
@@ -111,7 +98,7 @@ function TaskDetailView(props) {
             {disabled || (
               <Button
                 style={{ display: 'block', margin: '10px 0' }}
-                type='dashed'
+                type='primary'
                 onClick={handleAddNewField}
               >
                 Add new field
