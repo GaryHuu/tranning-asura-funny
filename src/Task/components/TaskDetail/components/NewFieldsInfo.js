@@ -1,7 +1,7 @@
 import { Button, Form, Input, Row, Select } from 'antd';
 import React from 'react';
 
-function NewFieldsInfo({ onConfirm }) {
+function NewFieldsInfo({ onConfirm, onCancel }) {
   const { Option } = Select;
   const handleFinish = (value) => {
     onConfirm(value);
@@ -14,7 +14,7 @@ function NewFieldsInfo({ onConfirm }) {
         </Form.Item>
         <Form.Item
           rules={[{ required: true }]}
-          style={{ margin: '0 30px', width: '180px' }}
+          style={{ margin: '0 20px', width: '180px' }}
           name='type'
           label='Type'
         >
@@ -24,8 +24,19 @@ function NewFieldsInfo({ onConfirm }) {
             <Option value='time from to'>Time From-to</Option>
           </Select>
         </Form.Item>
+        <Form.Item style={{ margin: '0 20px 0 0' }}>
+          <Button
+            onClick={() => {
+              onCancel();
+            }}
+            type='dashed'
+            htmlType='button'
+          >
+            Cancel
+          </Button>
+        </Form.Item>
         <Form.Item>
-          <Button type='primary' htmlType='submit'>
+          <Button type='dashed' htmlType='submit'>
             Confirm
           </Button>
         </Form.Item>

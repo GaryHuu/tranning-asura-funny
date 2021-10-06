@@ -1,5 +1,5 @@
 import moment from 'moment';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouteMatch } from 'react-router';
 
 import { api } from 'api';
@@ -24,42 +24,6 @@ function TaskDetail() {
   const [task, setTask] = useState({});
   const [fields, setFields] = useState([]);
   const [infoFieldList, setInfoFieldList] = useState([]);
-
-  console.log(mode);
-
-  const setFieldsByTask = useCallback(
-    (task) => {
-      let newFields = [];
-      infoFieldList.forEach((infoField) => {
-        let newInfoField = {
-          name: [infoField.name],
-          value: task[infoField.name],
-        };
-
-        if (infoField.type === 'date') {
-          newInfoField = {
-            name: [infoField.name],
-            value: moment(task[infoField.name], 'DD/MM/YYYY'),
-          };
-        }
-
-        if (infoField.type === 'time from to') {
-          newInfoField = {
-            name: [infoField.name],
-            value: [
-              moment(task[infoField.name]?.startTime, 'HH:mm:ss'),
-              moment(task[infoField.name]?.finishTime, 'HH:mm:ss'),
-            ],
-          };
-        }
-
-        newFields.push(newInfoField);
-      });
-
-      setFields(newFields);
-    },
-    [infoFieldList]
-  );
 
   const handleToggleMode = () => {
     if (mode === MODE.DISABLED) {
@@ -115,7 +79,7 @@ function TaskDetail() {
     (async () => {
       try {
         const result = await api.editByID(parseInt(id), newData);
-        setFieldsByTask(result);
+        // setFieldsByTask(result);
         setTask(result);
         setLoading(false);
       } catch (error) {
@@ -152,7 +116,7 @@ function TaskDetail() {
     (async () => {
       try {
         const result = await api.editByID(parseInt(id), newDataField);
-        setFieldsByTask(result);
+        // setFieldsByTask(result);
         setTask(result);
       } catch (error) {
         console.log(error);
@@ -175,7 +139,7 @@ function TaskDetail() {
     (async () => {
       try {
         const result = await api.editByID(parseInt(id), newDateField);
-        setFieldsByTask(result);
+        // setFieldsByTask(result);
         setTask(result);
       } catch (error) {
         console.log(error);
@@ -201,7 +165,7 @@ function TaskDetail() {
     (async () => {
       try {
         const result = await api.editByID(parseInt(id), name);
-        setFieldsByTask(result);
+        // setFieldsByTask(result);
         setTask(result);
       } catch (error) {
         console.log(error);
@@ -239,7 +203,7 @@ function TaskDetail() {
     (async () => {
       try {
         const result = await api.getByID(parseInt(id));
-        setFieldsByTask(result);
+        // setFieldsByTask(result);
         setTask(result);
       } catch (error) {
         console.log(error);
@@ -255,8 +219,41 @@ function TaskDetail() {
         console.log(error);
       }
     })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    const setFieldsByTask = () => {
+      let newFields = [];
+      infoFieldList.forEach((infoField) => {
+        let newInfoField = {
+          name: [infoField.name],
+          value: task[infoField.name],
+        };
+
+        if (infoField.type === 'date') {
+          newInfoField = {
+            name: [infoField.name],
+            value: moment(task[infoField.name], 'DD/MM/YYYY'),
+          };
+        }
+
+        if (infoField.type === 'time from to') {
+          newInfoField = {
+            name: [infoField.name],
+            value: [
+              moment(task[infoField.name]?.startTime, 'HH:mm:ss'),
+              moment(task[infoField.name]?.finishTime, 'HH:mm:ss'),
+            ],
+          };
+        }
+
+        newFields.push(newInfoField);
+      });
+
+      setFields(newFields);
+    };
+    setFieldsByTask();
+  }, [infoFieldList, task]);
 
   return (
     <TaskDetailView
@@ -269,6 +266,7 @@ function TaskDetail() {
       fields={fields}
       infoFieldList={infoFieldList}
       onRemoveFiled={handleRemoveField}
+      isEmpty={fields.length === 0}
     />
   );
 }
