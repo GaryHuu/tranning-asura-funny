@@ -1,5 +1,5 @@
-import { Button, Form, Spin } from 'antd';
-import React, { useState } from 'react';
+import { Button, Form, Spin, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
 
 import NewFieldsInfo from '../../NewFieldsInfo';
 import TaskDetailViewFieldItem from '../components/TaskDetailViewFieldItem';
@@ -15,8 +15,8 @@ function TaskDetailView(props) {
     loading,
     onSetModeEdit,
     onRemoveFiled,
+    isEmpty,
   } = props;
-
   const [isShowNewFiledsInfo, setIsShowNewFiledsInfo] = useState(false);
 
   const handleButtonAddSameFieldClick = (type, label, index) => {
@@ -45,9 +45,18 @@ function TaskDetailView(props) {
     setIsShowNewFiledsInfo(true);
   };
 
+  useEffect(() => {
+    setIsShowNewFiledsInfo(false);
+  }, [fields]);
+
   return (
     <div className='task-detail'>
       <div className='title-info'>Thông tin chi tiết</div>
+      {isEmpty && (
+        <Typography style={{ fontSize: '16px', fontStyle: 'italic' }}>
+          Chưa có thông tin, ấn Edit để thêm thông tin
+        </Typography>
+      )}
       {loading ? (
         <>
           {/* Loading... */}
@@ -56,8 +65,9 @@ function TaskDetailView(props) {
       ) : (
         <>
           <Button
-            style={{ margin: '10px 0' }}
+            style={{ margin: '10px 0', width: '80px' }}
             onClick={() => {
+              setIsShowNewFiledsInfo(false);
               onSetModeEdit();
             }}
             type='primary'
@@ -87,7 +97,17 @@ function TaskDetailView(props) {
 
               {disabled || (
                 <Button
-                  style={{ display: 'block', marginTop: '10px' }}
+                  style={{ display: 'block', margin: '10px 0' }}
+                  type='dashed'
+                  htmlType='button'
+                  onClick={handleAddNewField}
+                >
+                  Add new field
+                </Button>
+              )}
+              {disabled || isEmpty || (
+                <Button
+                  style={{ display: 'block', margin: '10px 0' }}
                   htmlType='submit'
                   type='primary'
                 >
@@ -95,18 +115,14 @@ function TaskDetailView(props) {
                 </Button>
               )}
             </Form>
-            {disabled || (
-              <Button
-                style={{ display: 'block', margin: '10px 0' }}
-                type='primary'
-                onClick={handleAddNewField}
-              >
-                Add new field
-              </Button>
-            )}
 
             {isShowNewFiledsInfo && (
-              <NewFieldsInfo onConfirm={handleConfirmNewFieldsInfo} />
+              <NewFieldsInfo
+                onCancel={() => {
+                  setIsShowNewFiledsInfo(false);
+                }}
+                onConfirm={handleConfirmNewFieldsInfo}
+              />
             )}
           </div>
         </>
