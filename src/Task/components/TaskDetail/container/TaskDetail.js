@@ -25,6 +25,8 @@ function TaskDetail() {
   const [fields, setFields] = useState([]);
   const [infoFieldList, setInfoFieldList] = useState([]);
 
+  console.log(mode);
+
   const setFieldsByTask = useCallback(
     (task) => {
       let newFields = [];
@@ -120,10 +122,10 @@ function TaskDetail() {
         console.log(error);
       }
     })();
-    handleToggleMode();
+    setMode(MODE.DISABLED);
   };
 
-  const formatNewFiledData = (newInfoFiled) => {
+  const formatNewFieldData = (newInfoFiled) => {
     if (newInfoFiled.type === 'text')
       return {
         [newInfoFiled.name]: '',
@@ -144,12 +146,12 @@ function TaskDetail() {
   };
 
   const handleOnAddField = (newInfoFiled) => {
-    const newDateField = formatNewFiledData(newInfoFiled);
-    console.log(newDateField);
+    const newDataField = formatNewFieldData(newInfoFiled);
+    // console.log(newDataField);
 
     (async () => {
       try {
-        const result = await api.editByID(parseInt(id), newDateField);
+        const result = await api.editByID(parseInt(id), newDataField);
         setFieldsByTask(result);
         setTask(result);
       } catch (error) {
@@ -168,7 +170,7 @@ function TaskDetail() {
   };
 
   const handleOnAddFieldAfterIndex = (newInfoFiled, index) => {
-    const newDateField = formatNewFiledData(newInfoFiled);
+    const newDateField = formatNewFieldData(newInfoFiled);
 
     (async () => {
       try {
@@ -195,6 +197,7 @@ function TaskDetail() {
   };
 
   const handleRemoveField = (name) => {
+    console.log('before remove: ', mode);
     (async () => {
       try {
         const result = await api.editByID(parseInt(id), name);
@@ -204,15 +207,16 @@ function TaskDetail() {
         console.log(error);
       }
     })();
-
     (async () => {
       try {
         const result = await api.deleteField(parseInt(id), name);
         setInfoFieldList(result);
+        console.log('on remove: ', mode);
       } catch (error) {
         console.log(error);
       }
     })();
+    console.log('after remove: ', mode);
   };
 
   // useEffect(() => {
@@ -251,7 +255,8 @@ function TaskDetail() {
         console.log(error);
       }
     })();
-  }, [id, setFieldsByTask]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return (
     <TaskDetailView

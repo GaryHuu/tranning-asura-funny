@@ -288,7 +288,7 @@ export const api = {
   },
   getInfoFields(id) {
     const item = this.infoField.find((item) => item.id === id);
-    console.log(item);
+    // console.log(item);
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(item.fields);

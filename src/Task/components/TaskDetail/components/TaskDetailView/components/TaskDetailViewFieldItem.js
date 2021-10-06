@@ -1,4 +1,3 @@
-import { MinusCircleOutlined } from '@ant-design/icons/lib/icons';
 import { Button, Input, Space, Typography } from 'antd';
 import React, { useState } from 'react';
 
