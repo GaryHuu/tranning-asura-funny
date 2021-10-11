@@ -1,5 +1,5 @@
 export const TYPEFIELDS = {
   TEXT: 'text',
-  DAY: 'date',
+  DATE: 'date',
   TIMEFROMTO: 'time from to',
 };

@@ -2,11 +2,13 @@ import { Space, Table } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+import withTaskList from '../container/withTaskList';
+
 TaskListForm.propTypes = {};
 
-function TaskListForm({ taskList, loading }) {
+function TaskListForm(props) {
+  const { taskList, loading } = props;
   const { Column } = Table;
-
   return (
     <Table dataSource={taskList} pagination={false} loading={loading}>
       <Column title='ID' dataIndex='id' key='id' />
@@ -24,4 +26,4 @@ function TaskListForm({ taskList, loading }) {
   );
 }
 
-export default TaskListForm;
+export default withTaskList(TaskListForm);

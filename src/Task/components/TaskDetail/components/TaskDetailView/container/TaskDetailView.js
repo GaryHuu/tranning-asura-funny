@@ -1,5 +1,6 @@
 import { Button, Form, Spin, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
+import withTaskDetail from 'Task/components/TaskDetail/container/withTaskDetail';
 
 import NewFieldsInfo from '../../NewFieldsInfo';
 import TaskDetailViewFieldItem from '../components/TaskDetailViewFieldItem';
@@ -17,6 +18,7 @@ function TaskDetailView(props) {
     onRemoveFiled,
     isEmpty,
   } = props;
+
   const [isShowNewFiledsInfo, setIsShowNewFiledsInfo] = useState(false);
 
   const handleButtonAddSameFieldClick = (type, label, index) => {
@@ -36,7 +38,6 @@ function TaskDetailView(props) {
     };
 
     onAddField(newInfoFiled);
-
     setIsShowNewFiledsInfo(false);
   };
 
@@ -129,4 +130,4 @@ function TaskDetailView(props) {
   );
 }
 
-export default TaskDetailView;
+export default withTaskDetail(TaskDetailView);

@@ -1,3 +1,3 @@
-import TaskDetail from './container/TaskDetail';
-
+import TaskDetailView from './components/TaskDetailView';
+const TaskDetail = TaskDetailView;
 export default TaskDetail;

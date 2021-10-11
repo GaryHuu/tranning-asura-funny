@@ -30,7 +30,7 @@ function TaskDetailViewFieldItem(props) {
     case TYPEFIELDS.TEXT:
       field = <TextEdit {...propsField} />;
       break;
-    case TYPEFIELDS.DAY:
+    case TYPEFIELDS.DATE:
       field = <DayEdit {...propsField} />;
       break;
     case TYPEFIELDS.TIMEFROMTO:

@@ -1,3 +1,3 @@
-import TaskList from './container/TaskList';
+import TaskListForm from './components/TaskListForm';
 
-export default TaskList;
+export default TaskListForm;
