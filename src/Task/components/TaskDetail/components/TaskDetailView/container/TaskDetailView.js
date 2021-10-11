@@ -1,5 +1,6 @@
 import { Button, Form, Spin, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
+
 import withTaskDetail from 'Task/components/TaskDetail/container/withTaskDetail';
 
 import NewFieldsInfo from '../../NewFieldsInfo';

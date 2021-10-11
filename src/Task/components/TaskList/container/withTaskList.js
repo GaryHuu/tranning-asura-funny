@@ -19,12 +19,7 @@ function withTaskList(Component) {
       })();
     }, []);
 
-    return (
-      <>
-        <div className='title'>Danh sách công việc</div>
-        <Component taskList={taskList} loading={loading} {...props} />
-      </>
-    );
+    return <Component taskList={taskList} loading={loading} {...props} />;
   };
 }
 
