@@ -5,45 +5,40 @@ import DayEdit from 'Task/components/DayEdit';
 import TextEdit from 'Task/components/TextEdit';
 import TimeFromTo from 'Task/components/TimeFromTo';
 
+import { TYPEFIELDS } from '../../assets/constants';
+
 function TaskDetailViewFieldItem(props) {
   const { disabled, name, label, type, onItemClick, index, onRemoveFiled } =
     props;
+
+  const [isShowLabel, setIsShowLabel] = useState(false);
+  const [valueLabel, setValueLabel] = useState('');
 
   const handleOnRemoveField = () => {
     onRemoveFiled(name);
   };
 
+  const propsField = {
+    onRemove: handleOnRemoveField,
+    disabled,
+    name,
+    label,
+  };
+
   let field;
-  if (type === 'text') {
-    field = (
-      <TextEdit
-        onRemove={handleOnRemoveField}
-        disabled={disabled}
-        name={name}
-        label={label}
-      />
-    );
-  } else if (type === 'date') {
-    field = (
-      <DayEdit
-        onRemove={handleOnRemoveField}
-        disabled={disabled}
-        name={name}
-        label={label}
-      />
-    );
-  } else if (type === 'time from to') {
-    field = (
-      <TimeFromTo
-        onRemove={handleOnRemoveField}
-        disabled={disabled}
-        name={name}
-        label={label}
-      />
-    );
+  switch (type) {
+    case TYPEFIELDS.TEXT:
+      field = <TextEdit {...propsField} />;
+      break;
+    case TYPEFIELDS.DAY:
+      field = <DayEdit {...propsField} />;
+      break;
+    case TYPEFIELDS.TIMEFROMTO:
+      field = <TimeFromTo {...propsField} />;
+      break;
+    default:
+      break;
   }
-  const [isShowLabel, setIsShowLabel] = useState(false);
-  const [valueLabel, setValueLabel] = useState('');
 
   const handleOnChange = (e) => {
     const newValue = e.target.value;

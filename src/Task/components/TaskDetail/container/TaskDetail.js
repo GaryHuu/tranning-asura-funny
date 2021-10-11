@@ -4,6 +4,7 @@ import { useRouteMatch } from 'react-router';
 
 import { api } from 'api';
 
+import { TYPEFIELDS } from '../components/assets/constants';
 import TaskDetailView from '../components/TaskDetailView';
 
 import '../assets/styles.scss';
@@ -11,6 +12,15 @@ import '../assets/styles.scss';
 const MODE = {
   DISABLED: 'DISABLED',
   EDIT: 'EDIT',
+};
+
+const DEFAULTVALUE = {
+  TEXT: '',
+  DAY: new Date().toLocaleDateString(),
+  TIMEFROMTO: {
+    STARTTIME: new Date().toLocaleTimeString(),
+    FINISHTIME: new Date().toLocaleTimeString(),
+  },
 };
 
 function TaskDetail() {
@@ -79,7 +89,6 @@ function TaskDetail() {
     (async () => {
       try {
         const result = await api.editByID(parseInt(id), newData);
-        // setFieldsByTask(result);
         setTask(result);
         setLoading(false);
       } catch (error) {
@@ -90,33 +99,30 @@ function TaskDetail() {
   };
 
   const formatNewFieldData = (newInfoFiled) => {
-    if (newInfoFiled.type === 'text')
+    if (newInfoFiled.type === TYPEFIELDS.TEXT)
       return {
-        [newInfoFiled.name]: '',
+        [newInfoFiled.name]: DEFAULTVALUE.TEXT,
       };
 
-    if (newInfoFiled.type === 'date')
+    if (newInfoFiled.type === TYPEFIELDS.DAY)
       return {
-        [newInfoFiled.name]: new Date().toLocaleDateString(),
+        [newInfoFiled.name]: DEFAULTVALUE.DAY,
       };
 
-    if (newInfoFiled.type === 'time from to')
+    if (newInfoFiled.type === TYPEFIELDS.TIMEFROMTO)
       return {
         [newInfoFiled.name]: {
-          startTime: new Date().toLocaleTimeString(),
-          finishTime: new Date().toLocaleTimeString(),
+          startTime: DEFAULTVALUE.TIMEFROMTO.STARTTIME,
+          finishTime: DEFAULTVALUE.TIMEFROMTO.FINISHTIME,
         },
       };
   };
 
   const handleOnAddField = (newInfoFiled) => {
     const newDataField = formatNewFieldData(newInfoFiled);
-    // console.log(newDataField);
-
     (async () => {
       try {
         const result = await api.editByID(parseInt(id), newDataField);
-        // setFieldsByTask(result);
         setTask(result);
       } catch (error) {
         console.log(error);
@@ -139,7 +145,6 @@ function TaskDetail() {
     (async () => {
       try {
         const result = await api.editByID(parseInt(id), newDateField);
-        // setFieldsByTask(result);
         setTask(result);
       } catch (error) {
         console.log(error);
@@ -161,11 +166,9 @@ function TaskDetail() {
   };
 
   const handleRemoveField = (name) => {
-    console.log('before remove: ', mode);
     (async () => {
       try {
         const result = await api.editByID(parseInt(id), name);
-        // setFieldsByTask(result);
         setTask(result);
       } catch (error) {
         console.log(error);
@@ -175,27 +178,11 @@ function TaskDetail() {
       try {
         const result = await api.deleteField(parseInt(id), name);
         setInfoFieldList(result);
-        console.log('on remove: ', mode);
       } catch (error) {
         console.log(error);
       }
     })();
-    console.log('after remove: ', mode);
   };
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   (async () => {
-  //     try {
-  //       const result = await api.getByID(parseInt(id));
-  //       setFieldsByTask(result);
-  //       setTask(result);
-  //       setLoading(false);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   })();
-  // }, [id, setFieldsByTask]);
 
   useEffect(() => {
     setMode(MODE.DISABLED);
@@ -203,7 +190,6 @@ function TaskDetail() {
     (async () => {
       try {
         const result = await api.getByID(parseInt(id));
-        // setFieldsByTask(result);
         setTask(result);
       } catch (error) {
         console.log(error);

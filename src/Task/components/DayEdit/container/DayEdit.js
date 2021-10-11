@@ -10,16 +10,7 @@ DayEdit.propTypes = {
 };
 
 function DayEdit(props) {
-  const { label, name, disabled, onRemove } = props;
-
-  return (
-    <DayEditForm
-      onRemove={onRemove}
-      label={label}
-      name={name}
-      disabled={disabled}
-    />
-  );
+  return <DayEditForm {...props} />;
 }
 
 export default DayEdit;

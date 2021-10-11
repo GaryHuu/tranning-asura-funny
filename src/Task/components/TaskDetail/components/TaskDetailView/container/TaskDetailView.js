@@ -34,7 +34,6 @@ function TaskDetailView(props) {
       ...value,
       name: value.label,
     };
-    // console.log(newInfoFiled);
 
     onAddField(newInfoFiled);
 
@@ -59,7 +58,6 @@ function TaskDetailView(props) {
       )}
       {loading ? (
         <>
-          {/* Loading... */}
           <Spin size='small' />
         </>
       ) : (
