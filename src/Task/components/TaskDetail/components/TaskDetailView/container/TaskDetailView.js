@@ -20,6 +20,9 @@ function TaskDetailView(props) {
     isEmpty,
   } = props;
 
+  console.log({ fields });
+  console.log({ infoFieldList });
+
   const [isShowNewFiledsInfo, setIsShowNewFiledsInfo] = useState(false);
 
   const handleButtonAddSameFieldClick = (type, label, index) => {

@@ -1,25 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { api } from 'api';
 
-function withTaskList(Component) {
-  return function (props) {
-    const [taskList, setTaskList] = useState([]);
-    const [loading, setLoading] = useState(true);
+function withTaskList(WrappedComponent) {
+  return class extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        taskList: [],
+        loading: true,
+      };
+    }
 
-    useEffect(() => {
+    componentDidMount() {
       (async () => {
         try {
           const data = await api.getAll();
-          setTaskList(data);
-          setLoading(false);
+          console.log(data);
+          this.setState({
+            taskList: data,
+            loading: false,
+          });
         } catch (error) {
           console.log(error);
         }
       })();
-    }, []);
+    }
 
-    return <Component taskList={taskList} loading={loading} {...props} />;
+    render() {
+      return (
+        <WrappedComponent
+          taskList={this.state.taskList}
+          loading={this.state.loading}
+          {...this.props}
+        />
+      );
+    }
   };
 }
 
