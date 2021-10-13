@@ -38,8 +38,8 @@ function withTaskDetail(WrappedComponent) {
     render() {
       return (
         <WrappedComponent
-          getTaskById={this.getTaskById}
-          updateTaskById={this.updateTaskById}
+          getDataById={this.getTaskById}
+          editData={this.updateTaskById}
           loading={this.state.loading}
           taskById={this.state.task}
           {...this.props}
