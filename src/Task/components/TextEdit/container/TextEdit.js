@@ -7,7 +7,6 @@ TextEdit.propTypes = {
   disabled: PropTypes.bool,
   name: PropTypes.string,
   label: PropTypes.string,
-  onRemove: PropTypes.func,
 };
 
 function TextEdit(props) {

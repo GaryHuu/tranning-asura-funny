@@ -8,14 +8,14 @@ import withTaskList from '../container/withTaskList';
 TaskListForm.propTypes = {};
 
 function TaskListForm(props) {
-  const { taskList, loading } = props;
+  const { taskList, isLoading } = props;
   const { Column } = Table;
   return (
     <>
       <div className='title'>Danh sách công việc</div>
-      <Table dataSource={taskList} pagination={false} loading={loading}>
+      <Table dataSource={taskList} pagination={false} loading={isLoading}>
         <Column title='ID' dataIndex='id' key='id' />
-        <Column title='Job Title' dataIndex='jobTitle' key='jobTitle' />
+        <Column title='Job Title' dataIndex='taskName' key='taskName' />
         <Column
           title='Action'
           key='action'
