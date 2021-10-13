@@ -8,15 +8,30 @@ function withTaskDetail(WrappedComponent) {
   return class extends React.Component {
     constructor(props) {
       super(props);
-      this.getTaskById = this.getTaskById.bind(this);
       this.state = {
         task: {},
+        loading: true,
       };
+
+      this.getTaskById = this.getTaskById.bind(this);
+      this.updateTaskById = this.updateTaskById.bind(this);
     }
 
     getTaskById = (id) => {
-      api.getDataById(id, (data) => {
-        this.setState({ task: data });
+      this.setState({ loading: true });
+      api
+        .getDataById(id, (data) => {
+          this.setState({ task: data });
+        })
+        .finally(() => {
+          this.setState({ loading: false });
+        });
+    };
+
+    updateTaskById = (id, values) => {
+      this.setState({ loading: true });
+      api.editData(id, values).finally(() => {
+        this.setState({ loading: false });
       });
     };
 
@@ -24,6 +39,8 @@ function withTaskDetail(WrappedComponent) {
       return (
         <WrappedComponent
           getTaskById={this.getTaskById}
+          updateTaskById={this.updateTaskById}
+          loading={this.state.loading}
           taskById={this.state.task}
           {...this.props}
         />
