@@ -20,7 +20,6 @@ function DynamicForm() {
     }
   }, [isOpen]);
 
-  // Handle remove field
   const handleRemoveField = (id) => {
     const values = [...inputFields];
     const index = values.findIndex((item) => item.key === id);
@@ -30,7 +29,6 @@ function DynamicForm() {
     setInputField(values);
   };
 
-  // Handle add field
   const handleAddNewField = (field) => {
     const newInputFields = [...inputFields];
     const newField = {
@@ -42,7 +40,7 @@ function DynamicForm() {
     newInputFields.push(newField);
     setInputField(newInputFields);
   };
-  // Handle add field at head
+
   const handleAddFieldHead = (field) => {
     const newInputFields = [...inputFields];
     const newField = {
@@ -55,7 +53,6 @@ function DynamicForm() {
     setInputField(newInputFields);
   };
 
-  // Handle add current field
   const handleAddCurrentField = (field) => {
     const newInputField = [...inputFields];
     const newField = {
@@ -71,7 +68,6 @@ function DynamicForm() {
     setInputField(newInputField);
   };
 
-  // Handle confirm
   const handleConfirmField = (value) => {
     if (actionType === 'addField') {
       handleAddNewField(value);
@@ -85,21 +81,21 @@ function DynamicForm() {
     setIsOpen(false);
   };
 
-  // Handle action type
   const handleAction = (action) => {
     setIsOpen(true);
     setActionType(action);
   };
+
   const handleActionKey = (action, key) => {
     setActionType(action);
     setKey(key);
     setIsOpen(true);
   };
-  // Handle close
+
   const handleClose = () => {
     setIsOpen(false);
   };
-  // render field
+
   const renderField = () => {
     // eslint-disable-next-line array-callback-return
     return inputFields.map((field) => {
@@ -157,7 +153,7 @@ function DynamicForm() {
       }
     });
   };
-  // Handle submit form
+
   const handleSubmitForm = (value) => {
     console.log(value);
   };
@@ -166,13 +162,10 @@ function DynamicForm() {
     <div
       className='container'
       style={{
-        display: 'flex',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        alignItems: 'center',
+        flex: 1,
       }}
     >
-      <h1 style={{ margin: '20px 0' }}>Dynamic Form</h1>
+      <div className='title'>Dynamic Form</div>
       {inputFields.length > 0 ? (
         <Form
           name='dynamic_form_nest_item'
@@ -205,7 +198,7 @@ function DynamicForm() {
               </Select>
             </Form.Item>
           </Row>
-          <Row style={{ marginLeft: '82px' }}>
+          <Row>
             <Form.Item>
               <Button type='primary' htmlType='submit'>
                 Confirm

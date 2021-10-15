@@ -1,4 +1,4 @@
-import { Space, Table } from 'antd';
+import { Space, Table, Button } from 'antd';
 import React from 'react';
 import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
@@ -26,6 +26,16 @@ function TaskListForm(props) {
           )}
         />
       </Table>
+
+      <Button
+        style={{
+          textAlign: 'center',
+          margin: '30px 60px',
+        }}
+        type='dashed'
+      >
+        <Link to='/dynamic'>Dynamic Form</Link>
+      </Button>
     </>
   );
 }
